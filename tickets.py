@@ -2,7 +2,8 @@ from datetime import datetime
 
 class Tickets():
     def __init__(self, *args):
-        self._data = datetime.now()
+        now = datetime.now()
+        self.data = datetime(now.year, now.month, now.day, now.hour, now.minute)
         self._idColab = None
         self.status = "por atender"
         self.tipo = "HW"
@@ -16,9 +17,13 @@ class Tickets():
             self.status = args[1]
             self.tipo = args[2]
 
+    @property
+    def data(self):
+        return self._data
 
-
-
+    @data.setter
+    def data(self, valor):
+        self._data= valor
 
     @property
     def idColab(self):
@@ -48,4 +53,4 @@ class Tickets():
             self._tipo = valor
     def __str__(self):
 
-        return (f"Colaborador: {self.idColab}, status: {self.status}, tipo: {self.tipo}")
+        return (f"Colaborador: {self.idColab}, status: {self.status}, tipo: {self.tipo}, data: {self.data}")
