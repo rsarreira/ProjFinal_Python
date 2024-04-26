@@ -1,3 +1,4 @@
+'''
 from datetime import datetime
 
 class Tickets():
@@ -54,3 +55,4 @@ class Tickets():
     def __str__(self):
 
         return (f"Colaborador: {self.idColab}, status: {self.status}, tipo: {self.tipo}, data: {self.data}")
+'''
