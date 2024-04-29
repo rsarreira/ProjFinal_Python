@@ -1,7 +1,7 @@
-
+from abc import ABC
 from datetime import datetime
 
-class Tickets():
+class Tickets(ABC):
     def __init__(self, *args):
         now = datetime.now()
         self.data = datetime(now.year, now.month, now.day, now.hour, now.minute)

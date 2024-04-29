@@ -26,7 +26,7 @@ password = input("password: ")
 print ("********************")
 
 
-sql = f"SELECT * FROM users WHERE id = {idcolab} AND utilizador = '{password}'"
+sql = f"SELECT * FROM users WHERE cod_colab = {idcolab} AND utilizador = '{password}'"
 pesquisa = Users(cursor.execute(sql))
 resultados = cursor.fetchall()
 
@@ -48,9 +48,8 @@ if resultados:
             tipoTicket = input("Qual o tipo de ticket que quer abrir: ")
             t1 = Tickets(idcolab, "", tipoTicket)
             print(t1)
-            sql = f"insert into tickets(data_hora, codigo_colaborador, tipo, estado) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
-            cursor.execute(sql)
-            conexao.commit()
+            #sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
+
 
             if tipoTicket=="HW":
                 equipamento = input("Qual o tipo de equipamento: ")
@@ -58,13 +57,16 @@ if resultados:
             if tipoTicket=="SW":
                 tiposw = input("Qual o tipo de sw: ")
                 descnes = input("Qual a descricao/necessidade: ")
-                sql2 = f"SELECT * FROM tickets WHERE codigo_colaborador = {idcolab} AND data_hora = '{t1.data}'"
-                pesquisa2 = Tickets(cursor.execute(sql2))
-                resultados2 = cursor.fetchall()
-                if resultados2:
-                    for resultado in resultados2:
-                        print("ID:", resultado[0])
-                sql3 = f"insert into tickets(data_hora, codigo_colaborador, tipo, estado) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
+                sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}','{descnes}','{tiposw}');"
+            cursor.execute(sql)
+            conexao.commit()
+                #sql2 = f"SELECT * FROM ticket WHERE cod_colab = {idcolab} AND datahora_gerado = '{t1.data}'"
+                #pesquisa2 = Tickets(cursor.execute(sql2))
+                #resultados2 = cursor.fetchall()
+                #if resultados2:
+                #    for resultado in resultados2:
+                #        print("ID:", resultado[0])
+                #sql3 = f"insert into tickets(datahora_gerado, cod_colab, tipo, estado_ticket) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
 
 
 else:
