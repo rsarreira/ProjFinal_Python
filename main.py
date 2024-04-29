@@ -1,7 +1,9 @@
-#from tickets import Tickets
+from tickets import Tickets
 from users import Users
 import mysql.connector
 
+#t1 = Tickets("26", "", "SW")
+#print (t1)
 #p1 = Users ()
 #print (p1)
 
@@ -22,29 +24,49 @@ print ("********************")
 idcolab = input("UserId: ")
 password = input("password: ")
 print ("********************")
-#tipo = input("Qual o tipo do seu ticket: ")
 
-#sql = (f"insert into tickets(codigo_colaborador, estado,tipo,data_hora) values('{idcolab}','{tipo}','{tipo},"
- #      f"'{idcolab}');")
-
-#sql = (f"select * from users where {id} = 1")
- #      f"'{idcolab}');")
-
-# Executar um insert
-#criacao = Tickets(cursor.execute(sql))
-
-# Executar um update
- #cursor.execute("update client set city='VNGaia' where name='rui';")
 
 sql = f"SELECT * FROM users WHERE id = {idcolab} AND utilizador = '{password}'"
 pesquisa = Users(cursor.execute(sql))
 resultados = cursor.fetchall()
+
+
+
 
 if resultados:
     for resultado in resultados:
         #print("ID:", resultado[0])
         #print("Utilizador:", resultado[1])
         print("UserId/Password corretos")
+        print("********************")
+        escolha = input("Quer inserir novo Ticket (1)\n"
+                              "listar os tickets atendidos num intervalo de datas(2)\n"
+                              "listar tickets resolvidos (3)\n"
+                              "listar tickets não resolvidos (4)\n"
+                              "media de tempo de atendimento de cada tipo de ticket (5)\n")
+        if escolha=="1":
+            tipoTicket = input("Qual o tipo de ticket que quer abrir: ")
+            t1 = Tickets(idcolab, "", tipoTicket)
+            print(t1)
+            sql = f"insert into tickets(data_hora, codigo_colaborador, tipo, estado) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
+            cursor.execute(sql)
+            conexao.commit()
+
+            if tipoTicket=="HW":
+                equipamento = input("Qual o tipo de equipamento: ")
+                avaria = input("Qual o tipo de avaria: ")
+            if tipoTicket=="SW":
+                tiposw = input("Qual o tipo de sw: ")
+                descnes = input("Qual a descricao/necessidade: ")
+                sql2 = f"SELECT * FROM tickets WHERE codigo_colaborador = {idcolab} AND data_hora = '{t1.data}'"
+                pesquisa2 = Tickets(cursor.execute(sql2))
+                resultados2 = cursor.fetchall()
+                if resultados2:
+                    for resultado in resultados2:
+                        print("ID:", resultado[0])
+                sql3 = f"insert into tickets(data_hora, codigo_colaborador, tipo, estado) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
+
+
 else:
     print("UserId sem acesso á aplicação")
     print("********************")
@@ -65,8 +87,9 @@ else:
         else:
             print("Erro ao encontrar novo utilizador inserido.")
     else:
-        print("Erro ao inserir novo utilizador.")
 
+        #print("Erro ao inserir novo utilizador.")
+        print("Insira")
 
 
 # Executar um delete

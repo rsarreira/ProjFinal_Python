@@ -1,18 +1,26 @@
 
 from datetime import datetime
 
-class Tickets():
+class Hwt():
     def __init__(self, *args):
+        super().__init__()
         now = datetime.now()
-        self.data = datetime(now.year, now.month, now.day, now.hour, now.minute)
-        self._idColab = None
-        self.status = "por atender"
-        self.tipo = "HW"
+        #self.idHw = ""
+        self.idTicket = ""
+        self.equipamento = None
+        self.avaria = None
+        self.descReparacao = None
+        self.dataHw = datetime(now.year, now.month, now.day, now.hour, now.minute)
+        self.dataHwf = datetime(now.year, now.month, now.day, now.hour, now.minute)
+        self.status = "aberto"
 
-        if len(args)==1 and isinstance(args[0], Tickets):
-            self.idColab = args[0].idColab
-            self.status = args[0].status
-            self.tipo = args[0].tipo
+        if len(args)==1 and isinstance(args[0], Hwt):
+            super().__init__(args[0], args[1], args[2], args[3], args[4], args[5], args[6])
+            self.estadoHW = args[7]
+        #   self.dataHw  =
+        #   self.data_horarHW = args[9]
+        #   self.dataHwf = args[9]
+
         if len(args)==3:
             self.idColab = args[0]
             self.status = args[1]
@@ -54,4 +62,4 @@ class Tickets():
             self._tipo = valor
     def __str__(self):
 
-        return (f"Tickets: {self.idColab}, status: {self.status}, tipo: {self.tipo}, data: {self.data}")
+        return (f"Colaborador: {self.idColab}, status: {self.status}, tipo: {self.tipo}, data: {self.data}")
