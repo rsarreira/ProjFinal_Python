@@ -1,65 +1,49 @@
-
 from datetime import datetime
+from tickets import Tickets
 
-class Hwt():
+
+class Hwt(Tickets):
     def __init__(self, *args):
         super().__init__()
-        now = datetime.now()
-        #self.idHw = ""
-        self.idTicket = ""
-        self.equipamento = None
-        self.avaria = None
-        self.descReparacao = None
-        self.dataHw = datetime(now.year, now.month, now.day, now.hour, now.minute)
-        self.dataHwf = datetime(now.year, now.month, now.day, now.hour, now.minute)
-        self.status = "aberto"
+        self._equipamento = None
+        self._avaria = None
+        self._desc_rep = None
 
-        if len(args)==1 and isinstance(args[0], Hwt):
-            super().__init__(args[0], args[1], args[2], args[3], args[4], args[5], args[6])
-            self.estadoHW = args[7]
-        #   self.dataHw  =
-        #   self.data_horarHW = args[9]
-        #   self.dataHwf = args[9]
+        if len(args) == 1 and isinstance(args[0], Hwt):
+            super().__init__(args[0])
+            self.equipamento = args[0].equipamento
+            self.avaria = args[0].avaria
+            self.desc_rep = args[0].desc_rep
 
-        if len(args)==3:
-            self.idColab = args[0]
-            self.status = args[1]
-            self.tipo = args[2]
+        if len(args) == 6:
+            super().__init__(args[0], args[1], args[2])
+            self.equipamento = args[3]
+            self.avaria = args[4]
+            self.desc_rep = args[5]
 
     @property
-    def data(self):
-        return self._data
+    def equipamento(self):
+        return self._equipamento
 
-    @data.setter
-    def data(self, valor):
-        self._data= valor
-
-    @property
-    def idColab(self):
-        return self._idColab
-
-
-    @idColab.setter
-    def idColab(self, valor):
-            self._idColab=valor
+    @equipamento.setter
+    def equipamento(self, valor):
+        self._equipamento = valor
 
     @property
-    def status(self):
-        return self._status
+    def avaria(self):
+        return self._avaria
 
-    @status.setter
-    def status(self, valor):
-        if valor in ("por atender", "atendido"):
-            self._status = valor
+    @avaria.setter
+    def avaria(self, valor):
+        self._avaria = valor
 
     @property
-    def tipo(self):
-        return self._tipo
+    def desc_rep(self):
+        return self._desc_rep
 
-    @tipo.setter
-    def tipo(self, valor):
-        if valor in ("HW", "SW"):
-            self._tipo = valor
+    @desc_rep.setter
+    def desc_rep(self, valor):
+        self._desc_rep = valor
+
     def __str__(self):
-
-        return (f"Colaborador: {self.idColab}, status: {self.status}, tipo: {self.tipo}, data: {self.data}")
+        return (f"Hardware com avaria no equipamento {self.equipamento}, com a seguinte avaria : {self.avaria} e descrição : {self.desc_rep} .")

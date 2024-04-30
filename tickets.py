@@ -2,47 +2,51 @@ from abc import ABC
 from datetime import datetime
 
 class Tickets(ABC):
+
     def __init__(self, *args):
         now = datetime.now()
-        self.data = datetime(now.year, now.month, now.day, now.hour, now.minute)
-        self._idColab = None
-        self.status = "por atender"
-        self.tipo = "HW"
+        self.datahora_gerado = datetime(now.year, now.month, now.day, now.hour, now.minute)
+        self._cod_colab = None
+        self._estado_ticket = "por atender"
+        self.tipo = None
 
         if len(args)==1 and isinstance(args[0], Tickets):
-            self.idColab = args[0].idColab
-            self.status = args[0].status
+            self.cod_colab = args[0].cod_colab
+            self.estado_ticket = args[0].estado_ticket
             self.tipo = args[0].tipo
         if len(args)==3:
-            self.idColab = args[0]
-            self.status = args[1]
+            self.cod_colab = args[0]
+            self.estado_ticket = args[1]
             self.tipo = args[2]
 
-    @property
-    def data(self):
-        return self._data
 
-    @data.setter
-    def data(self, valor):
-        self._data= valor
+
 
     @property
-    def idColab(self):
-        return self._idColab
+    def cod_colab(self):
+        return self._cod_colab
 
-
-    @idColab.setter
-    def idColab(self, valor):
-            self._idColab=valor
+    @cod_colab.setter
+    def cod_colab(self, valor):
+        self._cod_colab = valor
 
     @property
-    def status(self):
-        return self._status
+    def estado_ticket(self):
+        return self._estado_ticket
 
-    @status.setter
-    def status(self, valor):
+    @estado_ticket.setter
+    def estado_ticket(self, valor):
         if valor in ("por atender", "atendido"):
-            self._status = valor
+            self._estado_ticket = valor
+
+    @property
+    def estado_atend(self):
+        return self._estado_atend
+
+    @estado_atend.setter
+    def estado_atend(self, valor):
+        if valor in ("por atender", "atendido"):
+            self._estado_atend = valor
 
     @property
     def tipo(self):
@@ -52,6 +56,6 @@ class Tickets(ABC):
     def tipo(self, valor):
         if valor in ("HW", "SW"):
             self._tipo = valor
-    def __str__(self):
 
-        return (f"Tickets: {self.idColab}, status: {self.status}, tipo: {self.tipo}, data: {self.data}")
+    def __str__(self):
+        return (f"Tickets: {self.cod_colab}, status: {self.estado_ticket}, tipo: {self.tipo}, data: {self.datahora_gerado}")

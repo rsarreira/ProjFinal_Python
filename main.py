@@ -1,15 +1,23 @@
 from tickets import Tickets
 from users import Users
+from swt import Swt
+from hwt import Hwt
 import mysql.connector
 
-#t1 = Tickets("26", "", "SW")
-#print (t1)
+t1 = Tickets("26", "", "HW")
+print (t1)
+
+a1 = Swt("26", "", "SW","windows","install")
+print (a1)
+
+h1 = Hwt("26", "", "HW","desktop","partiu","descrever")
+print (h1)
+
 #p1 = Users ()
 #print (p1)
 
 #p2 = Users("ronye","informatico")
 #print(p2)
-
 
 # Conectar ao banco de dados~
 conexao = mysql.connector.connect(
@@ -35,7 +43,7 @@ resultados = cursor.fetchall()
 
 if resultados:
     for resultado in resultados:
-        #print("ID:", resultado[0])
+        print("ID:", resultado[2])
         #print("Utilizador:", resultado[1])
         print("UserId/Password corretos")
         print("********************")
@@ -46,8 +54,8 @@ if resultados:
                               "media de tempo de atendimento de cada tipo de ticket (5)\n")
         if escolha=="1":
             tipoTicket = input("Qual o tipo de ticket que quer abrir: ")
-            t1 = Tickets(idcolab, "", tipoTicket)
-            print(t1)
+            #t1 = Tickets(idcolab,"", tipoTicket)
+            #print(t1)
             #sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
 
 
@@ -57,7 +65,11 @@ if resultados:
             if tipoTicket=="SW":
                 tiposw = input("Qual o tipo de sw: ")
                 descnes = input("Qual a descricao/necessidade: ")
-                sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}','{descnes}','{tiposw}');"
+                a1 = Swt(idcolab, "", tipoTicket, tiposw, descnes)
+                #print(a1)
+                #sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software) values('{t1.datahora_gerado}','{idcolab}','{tipoTicket}','{t1.estado_ticket}','{descnes}','{tiposw}');"
+                sql = f"INSERT INTO ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software) VALUES('{a1.datahora_gerado}', '{a1.cod_colab}', '{a1.tipo}', '{a1.estado_ticket}', '{a1.desc_necess}', '{a1.software}');"
+
             cursor.execute(sql)
             conexao.commit()
                 #sql2 = f"SELECT * FROM ticket WHERE cod_colab = {idcolab} AND datahora_gerado = '{t1.data}'"
