@@ -67,7 +67,7 @@ if resultados:
                 avaria = input("Qual o tipo de avaria: ")
                 desc_rep = None
                 estado_atend = None
-                hw1 = Hwt(idcolab, "", tipoTicket, equipamento, avaria, desc_rep, estado_atend)
+                hw1 = Hwt(idcolab, equipamento, avaria, desc_rep, estado_atend)
                 #print(a1)
                 sql = f"INSERT INTO ticket(datahora_gerado, cod_colab, tipo, estado_ticket, equipamento, avaria, desc_rep, estado_atend) VALUES('{hw1.datahora_gerado}', '{hw1.cod_colab}', '{hw1.tipo}', '{hw1.estado_ticket}', '{hw1.equipamento}', '{hw1.avaria}', '{hw1.desc_rep}', '{hw1.estado_atend}');"
             if tipoTicket=="SW":
@@ -99,9 +99,10 @@ if resultados:
                     print("ID:", resultado[0],"Data:", resultado[1],"Tipo:", resultado[4], "Software:", resultado[10],"Descrição problema:", resultado[11])
         
             escolha = int(input("Inserir o ID do ticket que quer atender: "))
+            #criar objeto ticket
             sql2 = f"UPDATE tickets SET estado_atend = 'Em atendimento' WHERE id = {escolha}"
             pesquisa2 = cursor.execute(sql2)
-            
+
             atend = str.upper(input("O problema ficou resolvido? (S/N)"))
             if atend == "S":
                 sql2 = f"UPDATE tickets SET estado_atend = 'Em atendimento' WHERE id = {escolha}"

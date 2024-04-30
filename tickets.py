@@ -17,14 +17,13 @@ class Tickets(ABC):
             self.estado_ticket = args[0].estado_ticket
             self.tipo = args[0].tipo
             self.estado_atend = args[0].estado_atend
-            self.desc_rep = args[4].desc_rep
+            self.desc_rep = args[0].desc_rep
 
-        if len(args)==5:
+        if len(args)==4:
             self.cod_colab = args[0]
-            self.estado_ticket = args[1]
-            self.tipo = args[2]
-            self.estado_atend= args[3]
-            self.desc_rep = args[4]
+            self.tipo = args[1]
+            self.estado_atend= args[2]
+            self.desc_rep = args[3]
 
 
     @property

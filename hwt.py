@@ -13,10 +13,10 @@ class Hwt(Tickets):
             self.equipamento = args[0].equipamento
             self.avaria = args[0].avaria
 
-        if len(args) == 7:
-            super().__init__(args[0], args[1], args[2], args[3], args[4])
-            self.equipamento = args[5]
-            self.avaria = args[6]
+        if len(args) == 5: #criação ticket
+            super().__init__(args[0],"hw", args[1], args[2])
+            self.equipamento = args[3]
+            self.avaria = args[4]
 
     @property
     def equipamento(self):
