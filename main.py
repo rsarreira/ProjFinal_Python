@@ -4,6 +4,7 @@ from swt import Swt
 from hwt import Hwt
 import mysql.connector
 
+'''
 t1 = Tickets("26", "", "HW")
 print (t1)
 
@@ -18,6 +19,8 @@ print (h1)
 
 #p2 = Users("ronye","informatico")
 #print(p2)
+
+'''
 
 # Conectar ao banco de dados~
 conexao = mysql.connector.connect(
@@ -51,24 +54,29 @@ if resultados:
                               "listar os tickets atendidos num intervalo de datas(2)\n"
                               "listar tickets resolvidos (3)\n"
                               "listar tickets não resolvidos (4)\n"
-                              "media de tempo de atendimento de cada tipo de ticket (5)\n")
+                              "media de tempo de atendimento de cada tipo de ticket (5)\n"
+                              "Atender ticket (6)\n")
         if escolha=="1":
-            tipoTicket = input("Qual o tipo de ticket que quer abrir: ")
+            tipoTicket = str.upper(input("Qual o tipo de ticket que quer abrir: "))
             #t1 = Tickets(idcolab,"", tipoTicket)
             #print(t1)
             #sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
 
-
             if tipoTicket=="HW":
                 equipamento = input("Qual o tipo de equipamento: ")
                 avaria = input("Qual o tipo de avaria: ")
-            if tipoTicket=="SW":
-                tiposw = input("Qual o tipo de sw: ")
-                descnes = input("Qual a descricao/necessidade: ")
-                a1 = Swt(idcolab, "", tipoTicket, tiposw, descnes)
+                desc_rep = None
+                estado_atend = None
+                hw1 = Hwt(idcolab, "", tipoTicket, equipamento, avaria, desc_rep, estado_atend)
                 #print(a1)
-                #sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software) values('{t1.datahora_gerado}','{idcolab}','{tipoTicket}','{t1.estado_ticket}','{descnes}','{tiposw}');"
-                sql = f"INSERT INTO ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software) VALUES('{a1.datahora_gerado}', '{a1.cod_colab}', '{a1.tipo}', '{a1.estado_ticket}', '{a1.desc_necess}', '{a1.software}');"
+                sql = f"INSERT INTO ticket(datahora_gerado, cod_colab, tipo, estado_ticket, equipamento, avaria, desc_rep, estado_atend) VALUES('{hw1.datahora_gerado}', '{hw1.cod_colab}', '{hw1.tipo}', '{hw1.estado_ticket}', '{hw1.equipamento}', '{hw1.avaria}', '{hw1.desc_rep}', '{hw1.estado_atend}');"
+            if tipoTicket=="SW":
+                tipo = input("Qual o tipo de sw: ")
+                descnes = input("Qual a descricao/necessidade: ")
+                estado_atend = None
+                sw1 = Swt(idcolab, "", tipoTicket, tipo, descnes, estado_atend)
+                #print(a1)
+                sql = f"INSERT INTO ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software, estado_atend) VALUES('{sw1.datahora_gerado}', '{sw1.cod_colab}', '{sw1.tipo}', '{sw1.estado_ticket}', '{sw1.desc_necess}', '{sw1.software}', '{sw1.estado_atend}');"
 
             cursor.execute(sql)
             conexao.commit()
@@ -80,11 +88,31 @@ if resultados:
                 #        print("ID:", resultado[0])
                 #sql3 = f"insert into tickets(datahora_gerado, cod_colab, tipo, estado_ticket) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
 
+        elif escolha=="6":
+            sql2 = f"SELECT * FROM ticket WHERE estado_ticket = 'por atender'"
+            pesquisa2 = cursor.execute(sql2)
+            resultados2 = cursor.fetchall()
+            for resultado in resultados2:
+                if resultado[4] == 'HW':
+                    print("ID:", resultado[0],"Data:", resultado[1],"Tipo:", resultado[4], "Equipamento:", resultado[7],"Avaria:", resultado[8])
+                else:
+                    print("ID:", resultado[0],"Data:", resultado[1],"Tipo:", resultado[4], "Software:", resultado[10],"Descrição problema:", resultado[11])
+        
+            escolha = int(input("Inserir o ID do ticket que quer atender: "))
+            sql2 = f"UPDATE tickets SET estado_atend = 'Em atendimento' WHERE id = {escolha}"
+            pesquisa2 = cursor.execute(sql2)
+            
+            atend = str.upper(input("O problema ficou resolvido? (S/N)"))
+            if atend == "S":
+                sql2 = f"UPDATE tickets SET estado_atend = 'Em atendimento' WHERE id = {escolha}"
+            elif atend == "N":
+                
+
 
 else:
     print("UserId sem acesso á aplicação")
     print("********************")
-    respostaUser = input("Quer inserir novo User (S/N) : ")
+    respostaUser = str.upper(input("Quer inserir novo User (S/N) : "))
     print("********************")
     if respostaUser == 'S':
         novo_utilizador = input("Novo utilizador: ")

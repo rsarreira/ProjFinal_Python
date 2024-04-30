@@ -13,10 +13,10 @@ class Swt(Tickets):
             self.software = args[0].software
             self.desc_necess = args[0].desc_necess
 
-        if len(args) == 5:
-            super().__init__(args[0], args[1], args[2])
-            self.software = args[3]
-            self.desc_necess = args[4]
+        if len(args) == 6:
+            super().__init__(args[0], args[1], args[2], args[3])
+            self.software = args[4]
+            self.desc_necess = args[5]
 
     @property
     def software(self):
