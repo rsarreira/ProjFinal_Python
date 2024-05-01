@@ -1,40 +1,38 @@
 class Users():
     def __init__(self, *args):
-        self._id = 0
-        self._utilizador = ""
-        self.cargoemp = ""
+        self._idColab = 9999
+        self.nomeColab = "Convidado"
+        self._pin = 1234
+        self.cargo = "Convidado"
         if len(args) == 1 and isinstance(args[0], Users):
-            self.id = args[0].id
-            self.utilizador = args[0].utilizador
-            self.cargoemp = args[0].cargoemp
-        if len(args) == 3:
-            self.id = args[0]
-            self.utilizador = args[1]
-            self.cargoemp = args[2]
+            self.idColab = args[0].idColab
+            self.nomeColab = args[0].nomeColab
+            self.pin = args[0].pin
+            self.cargo = args[0].cargo
+        if len(args) == 4:
+            self.idColab = args[0]
+            self.nomeColab = args[1]
+            self.pin = args[2]
+            self.cargo = args[3]
 
     @property
-    def id(self):
-        return self._id
+    def idColab(self):
+        return self._idColab
 
-    @id.setter
-    def id(self, valor):
-        self._id = valor
-
-    @property
-    def utilizador(self):
-        return self._utilizador
-    @utilizador.setter
-    def utilizador(self, valor):
-        self._utilizador = valor
+    @idColab.setter
+    def idColab(self, valor):
+        if valor > 0:
+            self._idColab = valor
 
     @property
-    def cargoemp(self):
-        return self._cargoemp
-
-    @cargoemp.setter
-    def cargoemp(self, valor):
-        self._cargoemp = valor
-
+    def pin(self):
+        return self._pin
+    
+    @pin.setter
+    def pin(self, valor):
+        if valor >= 1000 and valor <= 9999:
+            self._pin = valor
+        
 
     def __str__(self):
-        return f"Id: {self.id}, utilizador: {self.utilizador}, cargo: {self.cargoemp}."
+        return f"ID: {self.idColab}, Nome: {self.nomeColab}, PIN: {self.pin} , Cargo: {self.cargo}."

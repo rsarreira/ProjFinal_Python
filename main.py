@@ -1,28 +1,10 @@
 from tickets import Tickets
 from users import Users
-from swt import Swt
-from hwt import Hwt
+from sw import SW
+from hw import HW
 import mysql.connector
 
-'''
-t1 = Tickets("26", "", "HW")
-print (t1)
-
-a1 = Swt("26", "", "SW","windows","install")
-print (a1)
-
-h1 = Hwt("26", "", "HW","desktop","partiu","descrever")
-print (h1)
-
-#p1 = Users ()
-#print (p1)
-
-#p2 = Users("ronye","informatico")
-#print(p2)
-
-'''
-
-# Conectar ao banco de dados~
+# Conectar ao banco de dados
 conexao = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -31,116 +13,182 @@ conexao = mysql.connector.connect(
 )
 
 cursor = conexao.cursor()
-print ("********************")
-idcolab = input("UserId: ")
-password = input("password: ")
-print ("********************")
+print ("Login na aplicação Ticket2Help.")
+idColab = input("UserID: ")
+pin = input("PIN: ")
 
-
-sql = f"SELECT * FROM users WHERE cod_colab = {idcolab} AND utilizador = '{password}'"
-pesquisa = Users(cursor.execute(sql))
-resultados = cursor.fetchall()
-
-
-
+sql = f"select * from users where idColab = '{idColab}' and pin = '{pin}'"
+pesquisa = cursor.execute(sql)
+resultados = cursor.fetchone()
 
 if resultados:
+    userID = resultados[0]
+    nome = resultados[1]
+    cargo = resultados[3]
     for resultado in resultados:
-        print("ID:", resultado[2])
-        #print("Utilizador:", resultado[1])
-        print("UserId/Password corretos")
-        print("********************")
-        escolha = input("Quer inserir novo Ticket (1)\n"
-                              "listar os tickets atendidos num intervalo de datas(2)\n"
-                              "listar tickets resolvidos (3)\n"
-                              "listar tickets não resolvidos (4)\n"
-                              "media de tempo de atendimento de cada tipo de ticket (5)\n"
-                              "Atender ticket (6)\n")
-        if escolha=="1":
-            tipoTicket = str.upper(input("Qual o tipo de ticket que quer abrir: "))
-            #t1 = Tickets(idcolab,"", tipoTicket)
-            #print(t1)
-            #sql = f"insert into ticket(datahora_gerado, cod_colab, tipo, estado_ticket) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
+        print("Dados corretos.")
+        print("UserID:" , userID)
+        print("Nome:" , nome)
+        print("Cargo: " , cargo)
+        escolha = int(input("Insira a ação que deseja efetuar:\n"
+                        "(1) Criar ticket.\n"
+                        "(2) Atender ticket.\n"
+                        "(3) Modificar ticket.\n"
+                        "(4) Visualizar % tickets atendidos num intervalo de datas.\n"
+                        "(5) Visualizar % de tickets resolvidos e não resolvidos.\n"
+                        "(6) Visualizar a média de tempo de atendimento de cada tipo de ticket.\n"
+                        "(7) Fechar a aplicação"))
+        while escolha < 1 or escolha >5:
+            escolha = int(input("Por favor insira apenas uma das opções abaixo:\n"
+                        "(1) Criar ticket.\n"
+                        "(2) Atender ticket.\n"
+                        "(3) Modificar ticket.\n"
+                        "(4) Visualizar % tickets atendidos num intervalo de datas.\n"
+                        "(5) Visualizar % de tickets resolvidos e não resolvidos.\n"
+                        "(6) Visualizar a média de tempo de atendimento de cada tipo de ticket.\n"
+                        "(7) Fechar a aplicação"))
+           
+        if escolha == 1:
+            tipoTicket = str.upper(input("Que tipo de ticket deseja criar?(HW/SW) "))
 
-            if tipoTicket=="HW":
-                equipamento = input("Qual o tipo de equipamento: ")
-                avaria = input("Qual o tipo de avaria: ")
-                desc_rep = None
-                estado_atend = None
-                hw1 = Hwt(idcolab, equipamento, avaria, desc_rep, estado_atend)
-                #print(a1)
-                sql = f"INSERT INTO ticket(datahora_gerado, cod_colab, tipo, estado_ticket, equipamento, avaria, desc_rep, estado_atend) VALUES('{hw1.datahora_gerado}', '{hw1.cod_colab}', '{hw1.tipo}', '{hw1.estado_ticket}', '{hw1.equipamento}', '{hw1.avaria}', '{hw1.desc_rep}', '{hw1.estado_atend}');"
-            if tipoTicket=="SW":
-                tipo = input("Qual o tipo de sw: ")
-                descnes = input("Qual a descricao/necessidade: ")
-                estado_atend = None
-                sw1 = Swt(idcolab, "", tipoTicket, tipo, descnes, estado_atend)
-                #print(a1)
-                sql = f"INSERT INTO ticket(datahora_gerado, cod_colab, tipo, estado_ticket, desc_necess, software, estado_atend) VALUES('{sw1.datahora_gerado}', '{sw1.cod_colab}', '{sw1.tipo}', '{sw1.estado_ticket}', '{sw1.desc_necess}', '{sw1.software}', '{sw1.estado_atend}');"
+            while tipoTicket != "HW" and tipoTicket != "SW":
+                tipoTicket = str.upper(input("Por favor insira apenas 'SW' ou 'HW'. "))
 
-            cursor.execute(sql)
+            if tipoTicket == "HW":
+                equipamento = input("Qual o equipamento? ")
+                avaria = input("Qual a avaria? ")
+                hw = HW(idColab , "HW" , equipamento , avaria)
+                sql = f"insert into ticket(idColab , datahoraGerado , estadoTicket , tipoTicket , equipamento , avaria) values('{hw.idColab}' , '{hw.datahoraGerado}' , '{hw.estadoTicket}' , '{hw.tipoTicket}' , '{hw.equipamento}' , '{hw.avaria}')"
+                cursor.execute(sql)
+
+            if tipoTicket == "SW":
+                software = input("Qual o software? ")
+                necessidade = input("Qual a necessidade? ")
+                sw = SW(idColab , "SW" , software , necessidade)
+                sql = f"insert into ticket(idColab , datahoraGerado , estadoTicket , tipoTicket , software , necessidade) values('{sw.idColab}' , '{sw.datahoraGerado}' , '{sw.estadoTicket}' , '{sw.tipoTicket}' , '{sw.software}' , '{sw.necessidade}')"
+                cursor.execute(sql)
+
             conexao.commit()
-                #sql2 = f"SELECT * FROM ticket WHERE cod_colab = {idcolab} AND datahora_gerado = '{t1.data}'"
-                #pesquisa2 = Tickets(cursor.execute(sql2))
-                #resultados2 = cursor.fetchall()
-                #if resultados2:
-                #    for resultado in resultados2:
-                #        print("ID:", resultado[0])
-                #sql3 = f"insert into tickets(datahora_gerado, cod_colab, tipo, estado_ticket) values('{t1.data}','{idcolab}','{tipoTicket}','{t1.status}');"
-
-        elif escolha=="6":
-            sql2 = f"SELECT * FROM ticket WHERE estado_ticket = 'por atender'"
-            pesquisa2 = cursor.execute(sql2)
-            resultados2 = cursor.fetchall()
-            for resultado in resultados2:
-                if resultado[4] == 'HW':
-                    print("ID:", resultado[0],"Data:", resultado[1],"Tipo:", resultado[4], "Equipamento:", resultado[7],"Avaria:", resultado[8])
+            
+        elif escolha == 2:
+            pesquisa = cursor.execute("SELECT * FROM ticket WHERE estadoTicket = 'Por atender'")
+            resultados = cursor.fetchall()
+            lista = []
+            for linha in resultados:
+                if linha[7] == "HW":
+                    print("TicketID:" , linha[0] , "Data:" , linha[2] , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9])
+                    lista.append(linha[0])
                 else:
-                    print("ID:", resultado[0],"Data:", resultado[1],"Tipo:", resultado[4], "Software:", resultado[10],"Descrição problema:", resultado[11])
-        
-            escolha = int(input("Inserir o ID do ticket que quer atender: "))
-            #criar objeto ticket
-            sql2 = f"UPDATE tickets SET estado_atend = 'Em atendimento' WHERE id = {escolha}"
-            pesquisa2 = cursor.execute(sql2)
+                    print("TicketID:" , linha[0] , "Data:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
+                    lista.append(linha[0])
+            escolha = int((input("Insira o ID do ticket que pretende atender. ")))
 
-            atend = str.upper(input("O problema ficou resolvido? (S/N)"))
-            if atend == "S":
-                sql2 = f"UPDATE tickets SET estado_atend = 'Em atendimento' WHERE id = {escolha}"
-            elif atend == "N":
-                
+            while escolha not in lista:
+                print("O ID do ticket que inseriu não consta na base de dados ou já está em atendimento. Por favor inserir um ticket válido.")              
+                if linha[7] == "HW":
+                    print("TicketID:" , linha[0] , "Data:" , linha[2] , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9])
+                else:
+                    print("TicketID:" , linha[0] , "Data:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
 
+                escolha = int(input("Insira o ID do ticket que pretende atender. "))
+            
+            sql = f"UPDATE ticket SET estadoAtendimento = 'Aberto' , estadoTicket = 'Em atendimento' WHERE idTicket = '{escolha}'"
+            pesquisa = cursor.execute(sql)
+            conexao.commit()
+
+        elif escolha == "3":
+            pesquisa = cursor.execute("SELECT * FROM ticket")
+            resultados = cursor.fetchall()
+            for resultado in resultados:
+                if resultado[7] == "HW":
+                    print("TicketID:" , resultado[0] , "Data:" , resultado[2] , "Tipo:" , resultado[7] , "Equipamento:" , resultado[8] , "Avaria:" , resultado[9])
+                else:
+                    print("TicketID:" , resultado[0] , "Data:" , resultado[2] , "Tipo:" , resultado[7] , "Software:" , resultado[10] , "Necessidade:" , resultado[11])
+
+            escolha = int(input("Insira o ID do ticket que pretende modificar. "))
+
+            while escolha is not resultados[0]:
+                print("O ID do ticket que inseriu não consta na base de dados. Por favor inserir um ticket válido.")
+                escolha = int(input("Insira o ID do ticket que pretende modificar. "))
+            
+            if resultado[7] == "HW":
+                ticket = HW(resultado)
+            else:
+                ticket = SW(resultado)
+            
+            if cargo == "Técnico":
+                nDados = input("Quantos dados pretende modificar?(1/2) ")
+                dados = []
+                for i in range(nDados):
+                    dado = input("Que dado pretende modificar?\n"
+                                "(1) Estado do atendimento.\n"
+                                "(2) Descrição da reparação.\n")
+                    if dado == dados[i-1] or dado < 1 or dado > 2:
+                        print("A sua escolha deve estar contida na lista e ser diferente das anteriores.")
+                        dado = input("Que dado pretende modificar?\n"
+                                    "(1) Estado do atendimento.\n"
+                                    "(2) Descrição da reparação.\n")
+                    dados.append(dado)
+                dados.sort()
+
+            else:
+                nDados = input("Quantos dados pretende modificar?(1-5) ")
+                dados = []
+                for i in range(nDados):
+                    dado = input("Que dado pretende modificar?\n"
+                                "(1) Tipo do Ticket.\n"
+                                "(2) Equipamento.\n"
+                                "(3) Avaria.\n"
+                                "(4) Software.\n"
+                                "(5) Necessidade.\n")
+                    if dado == dados[0] or dado == dados[1] or dado == dados[2] or dado == dados[3] or dado == dados[4] or dado <1 or dado > 5:
+                        print("A sua escolha deve estar contida na lista e ser diferente das anteriores.")
+                        dado = input("Que dado pretende modificar?\n"
+                                    "(1) Tipo do Ticket.\n"
+                                    "(2) Equipamento.\n"
+                                    "(3) Avaria.\n"
+                                    "(4) Software.\n"
+                                    "(5) Necessidade.\n")
+                    dados.append(dado)
+                dados.sort()
+            pesquisa = cursor.execute("UPDATE ticket SET estadoAtendimento = 'Aberto' WHERE idTicket = '{ticket.idTicket}'")
+            conexao.commit()
 
 else:
-    print("UserId sem acesso á aplicação")
-    print("********************")
-    respostaUser = str.upper(input("Quer inserir novo User (S/N) : "))
-    print("********************")
+    print("Utilizador sem acesso à aplicação.")
+
+    respostaUser = str.upper(input("Quer adicionar um novo utilizador à base de dados?(S/N) "))
+    
+    while respostaUser != "S" and respostaUser != "N":
+        respostaUser = str.upper(input("Por favor insira apenas 'S' ou 'N'. "))
+    
     if respostaUser == 'S':
-        novo_utilizador = input("Novo utilizador: ")
-        novo_cargoemp = input("Cargo do novo utilizador: ")
-        sql_insert = f"INSERT INTO users (utilizador, cargoemp) VALUES ('{novo_utilizador}', '{novo_cargoemp}')"
-        cursor.execute(sql_insert)
+        novo_idColab = int(input("Insira o ID do utilizador. "))
+        novo_nomeColab = input("Insira o nome do utilizador. ")
+        novo_pin = int(input("Insira um PIN. (4 dígitos) "))
+        novo_cargo = input("Insira o cargo do utilizador: ")
+        novo_utilizador = Users(novo_idColab , novo_nomeColab , novo_pin , novo_cargo)
+        #print(novo_utilizador)
+
+        sql = f"insert into users(idColab, nomeColab , pin , cargo) values('{novo_utilizador.idColab}' , '{novo_utilizador.nomeColab}' , '{novo_utilizador.pin}' , '{novo_utilizador.cargo}')"
+        cursor.execute(sql)
         conexao.commit()
-        print("Novo utilizador inserido com sucesso!")
-        cursor.execute(f"SELECT * FROM users WHERE utilizador = '{novo_utilizador}'")
-        novo_usuario = cursor.fetchone()
-        if novo_usuario:
-            novo_usuario_objeto = Users(novo_usuario[0], novo_usuario[1],novo_usuario[2])
-            print("Dados:", novo_usuario_objeto)
+'''       
+        pesquisa = cursor.execute("SELECT * FROM users")
+        resultados = cursor.fetchall()
+        if resultados:
+            for resultado in resultados:
+                if novo_utilizador.idColab == resultados[0]:
+                    print("ID já se encontra na base de dados.")
         else:
-            print("Erro ao encontrar novo utilizador inserido.")
+            cursor.execute("INSERT INTO users (idColab, nomeColab , pin , cargo) VALUES ('{novo_idColab}' , '{novo_nomeColab}' , '{novo_pin}', '{novo_cargo}')")
+            print("Novo utilizador inserido com sucesso.")
+        
+        conexao.commit()
     else:
-
-        #print("Erro ao inserir novo utilizador.")
-        print("Insira")
-
-
-# Executar um delete
-#cursor.execute("delete from client where name='rui';")
-
-# IMPORTANTE: Confirmar a transaÃ§Ã£o
-conexao.commit()
-
+        print("Aplicação finalizada.")
+'''
 
 conexao.close()
 #
+
