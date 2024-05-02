@@ -3,7 +3,7 @@ class Users():
         self._idColab = 9999
         self.nomeColab = "Convidado"
         self._pin = 1234
-        self.cargo = "Convidado"
+        self._cargo = "Convidado"
         if len(args) == 1 and isinstance(args[0], Users):
             self.idColab = args[0].idColab
             self.nomeColab = args[0].nomeColab
@@ -30,9 +30,17 @@ class Users():
     
     @pin.setter
     def pin(self, valor):
-        if valor >= 1000 and valor <= 9999:
+        if valor >= 1000 and valor <= 9999 or valor == str:
             self._pin = valor
+    
+    @property
+    def cargo(self):
+        return self._cargo
+    
+    @cargo.setter
+    def cargo(self, valor):
+        if valor == "Técnico" or valor == "Vendedor" or valor == "Operador":
+            self._cargo = valor
         
-
     def __str__(self):
         return f"ID: {self.idColab}, Nome: {self.nomeColab}, PIN: {self.pin} , Cargo: {self.cargo}."
