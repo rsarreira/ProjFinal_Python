@@ -1,8 +1,10 @@
 from tickets import Tickets
 from users import Users
 from sw import SW
+from datetime import datetime
 from hw import HW
 import mysql.connector
+
 
 # Conectar ao banco de dados
 conexao = mysql.connector.connect(
@@ -90,8 +92,12 @@ if resultados:
                 print("TicketID:" , linha[0] , "Data:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
 
             escolha = int(input("Insira o ID do ticket que pretende atender. "))
-        
-        sql = f"UPDATE ticket SET estadoAtendimento = 'Aberto' , estadoTicket = 'Em atendimento' WHERE idTicket = '{escolha}'"
+
+        estadoAtendimento = 'Aberto'
+        estadoTicket = 'Em atendimento'
+        datahoraAtendido = datetime.now()
+        tickets = Tickets( estadoAtendimento,estadoTicket ,datahoraAtendido)
+        sql = f"UPDATE ticket SET estadoAtendimento = '{tickets.estadoAtendimento}', estadoTicket = '{tickets.estadoTicket}', datahoraAtendido = '{tickets.datahoraAtendido}' WHERE idTicket = '{escolha}'"
         pesquisa = cursor.execute(sql)
         conexao.commit()
 
@@ -152,7 +158,40 @@ if resultados:
             dados.sort()
         pesquisa = cursor.execute("UPDATE ticket SET estadoAtendimento = 'Aberto' WHERE idTicket = '{ticket.idTicket}'")
         conexao.commit()
-    
+
+
+    elif escolha == 4:
+
+        #data_inicio_str = input("Insira a data de início (YYYY-MM-DD): ")
+        #data_fim_str = input("Insira a data de fim (YYYY-MM-DD): ")
+        data_inicio_str = '2020-01-01'
+        data_fim_str = '2025-01-01'
+        # Converta as strings de data para objetos datetime
+        data_inicio = datetime.strptime(data_inicio_str, "%Y-%m-%d")
+        data_fim = datetime.strptime(data_fim_str, "%Y-%m-%d")
+
+        # Chame o método para contar os tickets atendidos no intervalo
+        tickets = Tickets(cursor)
+        tickets_atendidos, porcentagem_atendidos = tickets.contar_tickets_atendidos_no_intervalo(data_inicio, data_fim, cursor)
+        print("no intervalo de datas mencionado estão",tickets_atendidos,"tickets atendidos sendo a percentagem=",porcentagem_atendidos,"%")
+
+
+    elif escolha == 5:
+
+        #data_inicio_str = input("Insira a data de início (YYYY-MM-DD): ")
+        #data_fim_str = input("Insira a data de fim (YYYY-MM-DD): ")
+        data_inicio_str = '2020-01-01'
+        data_fim_str = '2025-01-01'
+        # Converta as strings de data para objetos datetime
+        data_inicio = datetime.strptime(data_inicio_str, "%Y-%m-%d")
+        data_fim = datetime.strptime(data_fim_str, "%Y-%m-%d")
+
+        # Chame o método para contar os tickets atendidos no intervalo
+        tickets = Tickets(cursor)
+        porcentagem_resolvidos, porcentagem_nao_resolvidos = tickets.calcular_porcentagem_tickets_resolvidos(data_inicio, data_fim, cursor)
+        print("A porcentagem de tickets resolvidos é",porcentagem_resolvidos,"e nao resolvidos é",porcentagem_nao_resolvidos,"%")
+
+
     elif escolha == 7:
         print("Aplicação encerrada.")
         exit()

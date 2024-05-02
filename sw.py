@@ -16,3 +16,4 @@ class SW(Tickets):
             super().__init__(args[0] , args[1])            
             self.software = args[2]
             self.necessidade = args[3]
+
