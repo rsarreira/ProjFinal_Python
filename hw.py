@@ -15,3 +15,4 @@ class HW(Tickets):
             super().__init__(args[0] , args[1])
             self.equipamento = args[2]
             self.avaria = args[3]
+            
