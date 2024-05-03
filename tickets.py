@@ -28,25 +28,25 @@ class Tickets():
             self.tipoTicket = args[1]
 
     
-    def contar_tickets_atendidos_no_intervalo(self, data_inicio, data_fim,cursor):
-        contador_total = 0
-        contador_atendidos = 0
+    def tickets_atendidos_intervalo_datas(self, data_inicio, data_fim,cursor):
+        soma_total = 0
+        soma_atendidos = 0
 
         sql = f"SELECT COUNT(*) FROM ticket WHERE estadoTicket = 'Em atendimento' AND datahoraAtendido BETWEEN '{data_inicio}' AND '{data_fim}'"
         cursor.execute(sql)
-        contador_atendidos = cursor.fetchone()[0]
+        soma_atendidos = cursor.fetchone()[0]
 
         sql_total = f"SELECT COUNT(*) FROM ticket WHERE datahoraGerado BETWEEN '{data_inicio}' AND '{data_fim}'"
         cursor.execute(sql_total)
-        contador_total = cursor.fetchone()[0]
+        soma_total = cursor.fetchone()[0]
 
-        if contador_total == 0:
+        if soma_total == 0:
             return 0  # Evitar divisão por zero
 
-        porcentagem_atendidos = round((contador_atendidos / contador_total) * 100, 2)
-        return contador_atendidos, porcentagem_atendidos
+        porcentagem_atendidos = round((soma_atendidos / soma_total) * 100, 2)
+        return soma_atendidos, porcentagem_atendidos
 
-    def calcular_porcentagem_tickets_resolvidos(self, data_inicio, data_fim, cursor):
+    def porcentagem_tickets_resolvidos_naoresolvidos(self, data_inicio, data_fim, cursor):
 
         sql = f"SELECT COUNT(*) FROM ticket WHERE datahoraResolvido BETWEEN '{data_inicio}' AND '{data_fim}'"
         cursor.execute(sql)
@@ -65,3 +65,18 @@ class Tickets():
         porcentagem_nao_resolvidos = 100 - porcentagem_resolvidos
 
         return porcentagem_resolvidos, porcentagem_nao_resolvidos
+
+    def media_tempo_atendimento_por_tipo(self, cursor):
+
+        result_sw = None
+        result_hw = None
+
+        sql_hw = "SELECT ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) FROM ticket WHERE estadoTicket = 'Atendido' and tipoTicket = 'HW';"
+        cursor.execute(sql_hw)
+        result_hw = cursor.fetchone()[0]
+
+        sql_sw = "SELECT ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) FROM ticket WHERE estadoTicket = 'Atendido' and tipoTicket = 'SW';"
+        cursor.execute(sql_sw)
+        result_sw = cursor.fetchone()[0]
+
+        return result_hw, result_sw

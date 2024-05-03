@@ -186,10 +186,10 @@ def modificarTicket():
                 sql = f"update ticket set tipoTicket = 'SW' , software = '{software}' , necessidade = '{necessidade}' , equipamento = NULL , avaria = NULL where idTicket = '{escolha}'"
                 cursor.execute(sql)
 
-        else:
+        #else:
             
-        print("Ticket modificado com sucesso.")
-        conexao.commit()
+            #print("Ticket modificado com sucesso.")
+        #conexao.commit()
 
 
 conexao = mysql.connector.connect(
@@ -243,14 +243,13 @@ if resultados:
             #data_fim_str = input("Insira a data de fim (YYYY-MM-DD): ")
             data_inicio_str = '2020-01-01'
             data_fim_str = '2025-01-01'
-            # Converta as strings de data para objetos datetime
+
             data_inicio = datetime.strptime(data_inicio_str, "%Y-%m-%d")
             data_fim = datetime.strptime(data_fim_str, "%Y-%m-%d")
 
-            # Chame o método para contar os tickets atendidos no intervalo
             tickets = Tickets(cursor)
-            tickets_atendidos, porcentagem_atendidos = tickets.contar_tickets_atendidos_no_intervalo(data_inicio, data_fim, cursor)
-            print("no intervalo de datas mencionado estão",tickets_atendidos,"tickets atendidos sendo a percentagem=",porcentagem_atendidos,"%")
+            tickets_atendidos, porcentagem_atendidos = tickets.tickets_atendidos_intervalo_datas(data_inicio, data_fim, cursor)
+            print("No intervalo de datas mencionado estão",tickets_atendidos,"tickets atendidos sendo a percentagem=",porcentagem_atendidos,"%\n")
 
 
         elif escolha == 5:
@@ -259,14 +258,20 @@ if resultados:
             #data_fim_str = input("Insira a data de fim (YYYY-MM-DD): ")
             data_inicio_str = '2020-01-01'
             data_fim_str = '2025-01-01'
-            # Converta as strings de data para objetos datetime
+
             data_inicio = datetime.strptime(data_inicio_str, "%Y-%m-%d")
             data_fim = datetime.strptime(data_fim_str, "%Y-%m-%d")
 
-            # Chame o método para contar os tickets atendidos no intervalo
             tickets = Tickets(cursor)
-            porcentagem_resolvidos, porcentagem_nao_resolvidos = tickets.calcular_porcentagem_tickets_resolvidos(data_inicio, data_fim, cursor)
-            print("A porcentagem de tickets resolvidos é",porcentagem_resolvidos,"e nao resolvidos é",porcentagem_nao_resolvidos,"%")
+            porcentagem_resolvidos, porcentagem_nao_resolvidos = tickets.porcentagem_tickets_resolvidos_naoresolvidos(data_inicio, data_fim, cursor)
+            print("A porcentagem de tickets resolvidos é",porcentagem_resolvidos,"% e nao resolvidos é",porcentagem_nao_resolvidos,"%\n")
+
+        elif escolha == 6:
+
+            tickets = Tickets(cursor)
+            media_hw, media_sw = tickets.media_tempo_atendimento_por_tipo(cursor)
+            print("Média de tempo de atendimento para tickets HW:", media_hw,'minutos')
+            print("Média de tempo de atendimento para tickets SW:", media_sw,'minutos')
 
 
         elif escolha == 7:
