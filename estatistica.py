@@ -32,7 +32,7 @@ def porcentagem_tickets_resolvidos_naoresolvidos(cursor):
     else:
         porcentagem_resolvidos = round((tickets_resolvidos / total_tickets) * 100,1)
 
-    porcentagem_nao_resolvidos = 100 - porcentagem_resolvidos
+    porcentagem_nao_resolvidos = round(100 - porcentagem_resolvidos,1)
 
     return porcentagem_resolvidos, porcentagem_nao_resolvidos
 
