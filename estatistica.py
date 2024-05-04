@@ -38,34 +38,32 @@ def porcentagem_tickets_resolvidos_naoresolvidos(cursor):
 
 def media_tempo_atendimento_por_tipo(cursor):
 
-    sql_hw = "select ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'HW';"
+    sql_hw = "select round(avg(timestampdiff(minute, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'HW';"
     cursor.execute(sql_hw)
     result_hw = cursor.fetchone()[0]
 
-    sql_sw = "select ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'SW';"
-    cursor.execute(sql_sw)
-    result_sw = cursor.fetchone()[0]
-
-    return result_hw, result_sw
-
-def media_tempo_atendimento_por_tipo(cursor):
-
-    sql_hw = "select ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'HW';"
-    cursor.execute(sql_hw)
-    result_hw = cursor.fetchone()[0]
-
-    sql_sw = "select ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'SW';"
+    sql_sw = "select round(avg(timestampdiff(minute, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'SW';"
     cursor.execute(sql_sw)
     result_sw = cursor.fetchone()[0]
 
     return result_hw, result_sw
 
 def equipamento_mais_tickets(cursor):
-    sql_hw = "SELECT equipamento, COUNT(*) AS total_tickets FROM ticket WHERE tipoTicket = 'HW' GROUP BY equipamento ORDER BY total_tickets DESC LIMIT 1"
+    sql_hw = "select equipamento, count(*) as total_tickets from ticket where tipoTicket = 'HW' group by equipamento order by total_tickets desc limit 1"
     cursor.execute(sql_hw)
     result_hw = cursor.fetchone()
     if result_hw:
         equipamento, total_tickets = result_hw
         return equipamento, total_tickets
+    else:
+        return None
+
+def software_mais_tickets(cursor):
+    sql_sw = "select software, count(*) as total_tickets from ticket where tipoTicket = 'SW' group by software order by total_tickets desc limit 1"
+    cursor.execute(sql_sw)
+    result_hw = cursor.fetchone()
+    if result_hw:
+        software, total_tickets = result_hw
+        return software, total_tickets
     else:
         return None
