@@ -17,8 +17,9 @@ def escolhaOpcoes():
                             "(6) Visualizar % tickets atendidos num intervalo de datas.\n"
                             "(7) Visualizar % de tickets resolvidos e não resolvidos.\n"
                             "(8) Visualizar a média de tempo de atendimento de cada tipo de ticket.\n"
-                            "(9) Fechar a aplicação.\n"))
-    while escolha < 1 or escolha > 9:
+                            "(9) Visualizar equipamento com mais tickets associados.\n"
+                            "(10) Fechar a aplicação.\n"))
+    while escolha < 1 or escolha > 10:
         escolha = int(input("Por favor insira apenas uma das opções abaixo:\n"
                     "(1) Criar ticket.\n"
                     "(2) Atender ticket.\n"
@@ -28,7 +29,8 @@ def escolhaOpcoes():
                     "(6) Visualizar % tickets atendidos num intervalo de datas.\n"
                     "(7) Visualizar % de tickets resolvidos e não resolvidos.\n"
                     "(8) Visualizar a média de tempo de atendimento de cada tipo de ticket.\n"
-                    "(9) Fechar a aplicação.\n"))
+                    "(9) Visualizar equipamento com mais tickets associados.\n"
+                    "(10) Fechar a aplicação.\n"))
 
     return escolha
 
@@ -246,6 +248,15 @@ def mediaTempo():
     else:
         print("Média de tempo de resolução para tickets do tipo SW:", media_sw , "minutos(s) desde o momento em que foi atendido.")
 
+
+def equipamentoTickets():
+    equipamento_com_mais_tickets, total_tickets_equipamento = estatistica.equipamento_mais_tickets(cursor)
+    if equipamento_com_mais_tickets:
+        print(
+            f"O equipamento com mais tickets associados é o '{equipamento_com_mais_tickets}' com um total de {total_tickets_equipamento} tickets criados.")
+    else:
+        print("Não há tickets de hardware registrados na base de dados.")
+
 conexao = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -346,6 +357,8 @@ if resultados:
             mediaTempo()
 
         elif escolha == 9:
+            equipamentoTickets()
+        elif escolha == 10:
             print("Aplicação encerrada.")
             exit()
 

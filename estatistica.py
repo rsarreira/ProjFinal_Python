@@ -47,3 +47,25 @@ def media_tempo_atendimento_por_tipo(cursor):
     result_sw = cursor.fetchone()[0]
 
     return result_hw, result_sw
+
+def media_tempo_atendimento_por_tipo(cursor):
+
+    sql_hw = "select ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'HW';"
+    cursor.execute(sql_hw)
+    result_hw = cursor.fetchone()[0]
+
+    sql_sw = "select ROUND(AVG(TIMESTAMPDIFF(MINUTE, datahoraAtendido, datahoraResolvido))) from ticket where estadoTicket = 'Atendido' and tipoTicket = 'SW';"
+    cursor.execute(sql_sw)
+    result_sw = cursor.fetchone()[0]
+
+    return result_hw, result_sw
+
+def equipamento_mais_tickets(cursor):
+    sql_hw = "SELECT equipamento, COUNT(*) AS total_tickets FROM ticket WHERE tipoTicket = 'HW' GROUP BY equipamento ORDER BY total_tickets DESC LIMIT 1"
+    cursor.execute(sql_hw)
+    result_hw = cursor.fetchone()
+    if result_hw:
+        equipamento, total_tickets = result_hw
+        return equipamento, total_tickets
+    else:
+        return None
