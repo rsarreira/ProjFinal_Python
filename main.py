@@ -6,6 +6,12 @@ import mysql.connector
 from datetime import datetime
 import os
 
+def apagarTerminal():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+
 def escolhaOpcoes():
     if idColab == "Master":
         print("*****")
@@ -34,8 +40,8 @@ def escolhaOpcoes():
                             "(10) Visualizar equipamento com mais tickets associados.\n"
                             "(11) Visualizar software com mais tickets associados.\n"
                             "(12) Fechar a aplicação.\n"))
-    os.system('clear')
-    os.system('cls')
+    apagarTerminal()
+
     while escolha not in [1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12]:
         print("*****")
         print("Acesso total.")
@@ -54,8 +60,8 @@ def escolhaOpcoes():
                     "(10) Visualizar equipamento com mais tickets associados.\n"
                     "(11) Visualizar software com mais tickets associados.\n"
                     "(12) Fechar a aplicação.\n"))
-        os.system('clear')
-        os.system('cls')
+        apagarTerminal()
+
     return escolha
 
 def criarTicket():
@@ -95,8 +101,7 @@ def atenderTicket(cargo , idColab):
                 print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                 lista.append(linha[0])
         escolha = int((input("Insira o ID do ticket que pretende atender.\n")))
-        os.system('clear')
-        os.system('cls')
+        apagarTerminal()
 
         while escolha not in lista:
             for linha in resultados:       
@@ -105,9 +110,8 @@ def atenderTicket(cargo , idColab):
                 else:
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
             escolha = int(input("O ID do ticket que inseriu não consta na base de dados ou já está em atendimento. Por favor insira um ticket válido.\n"))
-            os.system('clear')
-            os.system('cls')
-
+            apagarTerminal()
+    
         atendido = datetime.now()
         sql = f"update ticket set estadoAtendimento = 'Aberto' , estadoTicket = 'Em atendimento' , datahoraAtendido = '{atendido}' where idTicket = '{escolha}'"
         cursor.execute(sql)
@@ -138,9 +142,8 @@ def modificarTicket(cargo , idColab):
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                         lista.append(linha[0])
                 escolha = int((input("Insira o ID do ticket que pretende modificar.\n")))
-                os.system('clear')
-                os.system('cls')
-
+                apagarTerminal()
+        
                 while escolha not in lista:
                     for linha in resultados:
                         if linha[7] == "HW":
@@ -148,37 +151,32 @@ def modificarTicket(cargo , idColab):
                         else:
                             print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                     escolha = int(input("O ID do ticket que inseriu não consta na base de dados ou não está em atendimento. Por favor insira um ticket válido.\n"))
-                os.system('clear')
-                os.system('cls')
-
+                apagarTerminal()
+        
                 res = str.upper(input("O problema ficou resolvido?(S/N) "))
                 while res != "S" and res != "N":
                     res = str.upper(input("Por favor insira apenas 'S' ou 'N'. "))
-                    os.system('clear')
-                    os.system('cls')
-
+                    apagarTerminal()
+            
                 if res == "S":
                     estadoAtend = "Resolvido"
                 else:
                     estadoAtend = "Não resolvido"
-                os.system('clear')
-                os.system('cls')
-
+                apagarTerminal()
+        
                 reparacao = input("Insira uma breve descrição da resolução do problema.\n")
 
                 resolvido = datetime.now()
                 sql = f"update ticket set estadoAtendimento = '{estadoAtend}' , estadoTicket = 'Atendido' , datahoraResolvido = '{resolvido}' , descRep = '{reparacao}' where idTicket = '{escolha}'"
                 cursor.execute(sql)
                 conexao.commit()
-                os.system('clear')
-                os.system('cls')
+                apagarTerminal()
                 print("Ticket modificado com sucesso.")
             
             else:
-                os.system('clear')
-                os.system('cls')
+                apagarTerminal()    
                 print("Não existem tickets em atendimento.")
-        
+
         else:
             cursor.execute("select * from ticket where estadoTicket = 'Por atender'")
             resultados = cursor.fetchall()
@@ -191,9 +189,8 @@ def modificarTicket(cargo , idColab):
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                     lista.append(linha[0])
             escolha = int((input("Insira o ID do ticket que pretende modificar.\n")))
-            os.system('clear')
-            os.system('cls')
-
+            apagarTerminal()
+    
             while escolha not in lista:
                 for linha in resultados:
                     if linha[7] == "HW":
@@ -201,9 +198,8 @@ def modificarTicket(cargo , idColab):
                     else:
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                 escolha = int(input("O ID do ticket que inseriu não consta na base de dados ou já está em atendimento. Por favor insira um ticket válido.\n"))
-            os.system('clear')
-            os.system('cls')
-
+            apagarTerminal()
+    
             tipo = str.upper(input("Qual o tipo do ticket?(HW/SW) "))
 
             while tipo != "HW" and tipo != "SW":
@@ -222,8 +218,7 @@ def modificarTicket(cargo , idColab):
                 cursor.execute(sql)
 
             conexao.commit()
-            os.system('clear')
-            os.system('cls')
+            apagarTerminal()
             print("Ticket modificado com sucesso.")            
 
     else:
@@ -241,9 +236,8 @@ def modificarTicket(cargo , idColab):
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                     lista.append(linha[0])
             escolha = int((input("Insira o ID do ticket que pretende modificar.\n")))
-            os.system('clear')
-            os.system('cls')
-
+            apagarTerminal()
+    
             while escolha not in lista:
                 for linha in resultados:
                     if linha[7] == "HW":
@@ -251,9 +245,8 @@ def modificarTicket(cargo , idColab):
                     else:
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                 escolha = int(input("O ID do ticket que inseriu não consta na base de dados, já está em atendimento ou pertence a outro utilizador. Por favor insira um ticket válido.\n"))
-            os.system('clear')
-            os.system('cls')
-
+            apagarTerminal()
+    
             tipo = str.upper(input("Qual o tipo do ticket?(HW/SW) "))
 
             while tipo != "HW" and tipo != "SW":
@@ -272,23 +265,20 @@ def modificarTicket(cargo , idColab):
                 cursor.execute(sql)
 
             conexao.commit()
-            os.system('clear')
-            os.system('cls')
+            apagarTerminal()
             print("Ticket modificado com sucesso.")            
 
         else:
-            os.system('clear')
-            os.system('cls')
+            apagarTerminal()
             print("Já não tem tickets por atender. Contacte diretamente um técnico.")
-        
+
 def criarUser():
     novo_idColab = int(input("Insira o ID do utilizador. "))
     novo_nomeColab = input("Insira o nome do utilizador. ")
     novo_pin = int(input("Insira um PIN. (4 dígitos) ")) 
     novo_cargo = input("Insira o cargo do utilizador: ")
     novo_utilizador = Users(novo_idColab , novo_nomeColab , novo_pin , novo_cargo)
-    os.system('clear')
-    os.system('cls')
+    apagarTerminal()
 
     cursor.execute("select * from users")
     resultados = cursor.fetchall()
@@ -317,17 +307,15 @@ def removerUser():
         print("UserID:" , linha[0] , "Nome:" , linha[1] , "Cargo:" , linha[2])
         lista.append(linha[0])
     escolha = int((input("Insira o ID de utilizador que pretende remover.\n")))
-    os.system('clear')
-    os.system('cls')
+    apagarTerminal()
 
     while escolha not in lista:
         for linha in resultados:
                 print("UserID:" , linha[0] , "Nome:" , linha[1] , "Cargo:" , linha[2])
 
         escolha = int(input("O ID de utilizador que inseriu não consta na base de dados. Por favor insira um ID válido.\n"))
-        os.system('clear')
-        os.system('cls')
-    
+        apagarTerminal()
+
     sql = f"delete from users where idColab = '{escolha}'"
     cursor.execute(sql)
     print("Utilizador removido com sucesso.")
@@ -353,8 +341,7 @@ def verificarTicket():
                              "(1) Utilizador.\n"
                              "(2) Ticket ID.\n"
                              "(3) Sair.\n")))
-        os.system('clear')
-        os.system('cls')
+        apagarTerminal()
 
         while escolha not in [1 , 2 , 3]:
             for linha in resultados:       
@@ -367,21 +354,19 @@ def verificarTicket():
                                 "(1) Utilizador.\n"
                                 "(2) Ticket ID.\n"
                                 "(3) Sair.\n")))
-            os.system('clear')
-            os.system('cls')
-        
+            apagarTerminal()
+    
         if escolha == 1:
             user = int(input("Insira o ID do utilizador. "))
-            os.system('clear')
-            os.system('cls')
+            apagarTerminal()
+    
             if user not in listaColab:
                 for linha in resultados:       
                     if linha[7] == "HW":
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9] , "Desc. da reparação:" , linha[12])
                     else:
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11] , "Desc. da reparação:" , linha[12])
-                os.system('clear')
-                os.system('cls')               
+                apagarTerminal()           
                 print("O utilizador não tem tickets registados na base de dados. ")
 
             else:
@@ -396,16 +381,15 @@ def verificarTicket():
 
         elif escolha == 2:
             ticket = int(input("Insira o ID do ticket. "))
-            os.system('clear')
-            os.system('cls')
+            apagarTerminal()
+    
             if ticket not in listaTicket:
                 for linha in resultados:       
                     if linha[7] == "HW":
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9] , "Desc. da reparação:" , linha[12])
                     else:
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11] , "Desc. da reparação:" , linha[12])
-                os.system('clear')
-                os.system('cls')                
+                apagarTerminal()       
                 print("O ticket que inseriu não existe na base de dados. ")
 
             else:
@@ -469,10 +453,9 @@ print ("Login na aplicação Ticket2Help.")
 print("*****")
 idColab = input("UserID: ")
 pin = int(input("PIN: "))
-os.system('clear')
-os.system('cls')
+apagarTerminal()
 
-if idColab == "Master" and pin == 9999:   
+if idColab == "Master" and pin == 9999:
     escolha = None
     while escolha != 12:
 
