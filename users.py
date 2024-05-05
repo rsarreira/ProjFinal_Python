@@ -1,7 +1,7 @@
 class Users():
     def __init__(self, *args):
         self._idColab = 9999
-        self.nomeColab = "Convidado"
+        self._nomeColab = "Convidado"
         self._pin = 1234
         self._cargo = "Convidado"
         if len(args) == 1 and isinstance(args[0], Users):
@@ -25,12 +25,21 @@ class Users():
             self._idColab = valor
 
     @property
+    def nomeColab(self):
+        return self._nomeColab
+
+    @nomeColab.setter
+    def nomeColab(self, valor):
+        if valor == str:
+            self._nomeColab = valor
+
+    @property
     def pin(self):
         return self._pin
     
     @pin.setter
     def pin(self, valor):
-        if valor >= 1000 and valor <= 9999 or valor == str:
+        if valor >= 1000 and valor <= 9999:
             self._pin = valor
     
     @property

@@ -8,59 +8,70 @@ import os
 
 def apagarTerminal():
     if os.name == 'nt':
-        os.system('cls')
+        _ = os.system('cls')
     else:
-        os.system('clear')
+        _ = os.system('clear')
 
 def escolhaOpcoes():
     if idColab == "Master":
-        print("*****")
+        print("***************")
         print("Acesso total.")
         print("UserID: Master")
-        print("*****")
+        print("***************")
     
     else:
-        print("*****")
+        print("***************")
         print("Dados corretos.")
         print("UserID:" , userID)
         print("Nome:" , nome)
         print("Cargo:" , cargo)
-        print("*****")
+        print("***************")
 
-    escolha = int(input("Insira a ação que deseja efetuar:\n"
+    while True:
+        try:
+            escolha = int(input("Insira a ação que deseja efetuar:\n"
+                        "(1) Criar ticket.\n"
+                        "(2) Atender ticket.\n"
+                        "(3) Modificar ticket.\n"
+                        "(4) Criar utilizador.\n"
+                        "(5) Remover utilizador.\n"
+                        "(6) Verificar estado dos tickets.\n"
+                        "(7) Visualizar % tickets atendidos num intervalo de datas.\n"
+                        "(8) Visualizar % de tickets resolvidos e não resolvidos.\n"
+                        "(9) Visualizar a média de tempo de resolução de cada tipo de ticket.\n"
+                        "(10) Visualizar equipamento com mais tickets associados.\n"
+                        "(11) Visualizar software com mais tickets associados.\n"
+                        "(12) Fechar a aplicação.\n"))
+            apagarTerminal()
+            break
+        except:
+            apagarTerminal()
+            print("Insira apenas números inteiros.")
+
+    while escolha not in [1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12]:
+        print("***************")
+        print("Acesso total.")
+        print("UserID: Master")
+        print("***************")
+        while True:
+            try:
+                escolha = int(input("Por favor insira apenas uma das opções abaixo:\n"
                             "(1) Criar ticket.\n"
                             "(2) Atender ticket.\n"
                             "(3) Modificar ticket.\n"
                             "(4) Criar utilizador.\n"
-                            "(5) Remover utilizador.\n"
+                            "(5) Apagar utilizador.\n"
                             "(6) Verificar estado dos tickets.\n"
                             "(7) Visualizar % tickets atendidos num intervalo de datas.\n"
                             "(8) Visualizar % de tickets resolvidos e não resolvidos.\n"
-                            "(9) Visualizar a média de tempo de atendimento de cada tipo de ticket.\n"
+                            "(9) Visualizar a média de tempo de resolução de cada tipo de ticket.\n"
                             "(10) Visualizar equipamento com mais tickets associados.\n"
                             "(11) Visualizar software com mais tickets associados.\n"
                             "(12) Fechar a aplicação.\n"))
-    apagarTerminal()
-
-    while escolha not in [1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12]:
-        print("*****")
-        print("Acesso total.")
-        print("UserID: Master")
-        print("*****") 
-        escolha = int(input("Por favor insira apenas uma das opções abaixo:\n"
-                    "(1) Criar ticket.\n"
-                    "(2) Atender ticket.\n"
-                    "(3) Modificar ticket.\n"
-                    "(4) Criar utilizador.\n"
-                    "(5) Apagar utilizador.\n"
-                    "(6) Verificar estado dos tickets.\n"
-                    "(7) Visualizar % tickets atendidos num intervalo de datas.\n"
-                    "(8) Visualizar % de tickets resolvidos e não resolvidos.\n"
-                    "(9) Visualizar a média de tempo de atendimento de cada tipo de ticket.\n"
-                    "(10) Visualizar equipamento com mais tickets associados.\n"
-                    "(11) Visualizar software com mais tickets associados.\n"
-                    "(12) Fechar a aplicação.\n"))
-        apagarTerminal()
+                apagarTerminal()
+            except:
+                apagarTerminal()
+                print("Insira apenas números inteiros.")
 
     return escolha
 
@@ -84,7 +95,7 @@ def criarTicket():
         sql = f"insert into ticket(idColab , datahoraGerado , estadoTicket , tipoTicket , software , necessidade) values('{sw.idColab}' , '{sw.datahoraGerado}' , '{sw.estadoTicket}' , '{sw.tipoTicket}' , '{sw.software}' , '{sw.necessidade}')"
         cursor.execute(sql)
 
-    print("*****")
+    print("***************")
     print("Ticket criado com sucesso.")
     conexao.commit()
 
@@ -100,8 +111,14 @@ def atenderTicket(cargo , idColab):
             else:
                 print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                 lista.append(linha[0])
-        escolha = int((input("Insira o ID do ticket que pretende atender.\n")))
-        apagarTerminal()
+        
+        while True:
+            try:
+                escolha = int((input("Insira o ID do ticket que pretende atender.\n")))
+                apagarTerminal()
+                break
+            except:
+                print("Insira apenas números inteiros.")
 
         while escolha not in lista:
             for linha in resultados:       
@@ -109,30 +126,56 @@ def atenderTicket(cargo , idColab):
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9])
                 else:
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
-            escolha = int(input("O ID do ticket que inseriu não consta na base de dados ou já está em atendimento. Por favor insira um ticket válido.\n"))
+            
+            while True:
+                try:
+                    escolha = int(input("O ID do ticket que inseriu não consta na base de dados ou já está em atendimento. Por favor insira um ticket válido.\n"))
+                    apagarTerminal()
+                    break
+                except:
+                    print("Insira apenas números inteiros.")
             apagarTerminal()
     
         atendido = datetime.now()
         sql = f"update ticket set estadoAtendimento = 'Aberto' , estadoTicket = 'Em atendimento' , datahoraAtendido = '{atendido}' where idTicket = '{escolha}'"
         cursor.execute(sql)
-        print("*****")
+        print("***************")
         print("Ticket atendido com sucesso.")
         conexao.commit()
     else:
-        print("*****")
+        print("***************")
         print("Utilizador sem acesso à opção selecionada.")
 
 def modificarTicket(cargo , idColab):
     if cargo == "Técnico" or idColab == "Master":
-        ret_res = int(input("Pretende:\n"
-                        "(1) Resolver ticket.\n"
-                        "(2) Retificar ticket.\n"))
-    
+        while True:
+            try:
+                ret_res = int(input("Pretende:\n"
+                                "(1) Resolver ticket.\n"
+                                "(2) Retificar ticket.\n"))
+                apagarTerminal()
+                break
+            except:
+                apagarTerminal()
+                print("Insira apenas números inteiros.")
+        
+        while ret_res not in [1 , 2]:
+            while True:
+                try:
+                    ret_res = int(input("Escolha inválida.\n"
+                                    "Pretende:\n"
+                                    "(1) Resolver ticket.\n"
+                                    "(2) Retificar ticket.\n"))
+                    apagarTerminal()
+                    break
+                except:
+                    apagarTerminal()
+        
         if ret_res == 1:
             cursor.execute("select * from ticket where estadoTicket = 'Em atendimento'")
             resultados = cursor.fetchall()
             lista = []
-
+            apagarTerminal()
             if resultados:
                 for linha in resultados:
                     if linha[7] == "HW":
@@ -141,8 +184,14 @@ def modificarTicket(cargo , idColab):
                     else:
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
                         lista.append(linha[0])
-                escolha = int((input("Insira o ID do ticket que pretende modificar.\n")))
-                apagarTerminal()
+                
+                while True:
+                    try:
+                        escolha = int((input("Insira o ID do ticket que pretende modificar.\n")))
+                        apagarTerminal()
+                        break
+                    except:
+                        print("Insira apenas números inteiros.")
         
                 while escolha not in lista:
                     for linha in resultados:
@@ -150,9 +199,15 @@ def modificarTicket(cargo , idColab):
                             print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9])
                         else:
                             print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11])
-                    escolha = int(input("O ID do ticket que inseriu não consta na base de dados ou não está em atendimento. Por favor insira um ticket válido.\n"))
-                apagarTerminal()
-        
+
+                    while True:
+                        try:
+                            escolha = int(input("O ID do ticket que inseriu não consta na base de dados ou não está em atendimento. Por favor insira um ticket válido.\n"))
+                            apagarTerminal()
+                            break
+                        except:
+                            print("Insira apenas números inteiros.")
+
                 res = str.upper(input("O problema ficou resolvido?(S/N) "))
                 while res != "S" and res != "N":
                     res = str.upper(input("Por favor insira apenas 'S' ou 'N'. "))
@@ -181,6 +236,7 @@ def modificarTicket(cargo , idColab):
             cursor.execute("select * from ticket where estadoTicket = 'Por atender'")
             resultados = cursor.fetchall()
             lista = []
+            apagarTerminal()
             for linha in resultados:
                 if linha[7] == "HW":            
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9])
@@ -273,10 +329,20 @@ def modificarTicket(cargo , idColab):
             print("Já não tem tickets por atender. Contacte diretamente um técnico.")
 
 def criarUser():
-    novo_idColab = int(input("Insira o ID do utilizador. "))
-    novo_nomeColab = input("Insira o nome do utilizador. ")
-    novo_pin = int(input("Insira um PIN. (4 dígitos) ")) 
-    novo_cargo = input("Insira o cargo do utilizador: ")
+    while True:
+        try:
+            novo_idColab = int(input("Insira o ID do utilizador. "))
+            break
+        except:
+            print("Insira apenas números inteiros.")
+    novo_nomeColab = input("Insira o nome do utilizador.(Default: Convidado) ")
+    while True:
+        try:
+            novo_pin = int(input("Insira um PIN. (4 dígitos) "))
+            break
+        except:
+            print("Insira apenas números inteiros.")
+    novo_cargo = input("Insira o cargo do utilizador:(Técnico, Vendedor, Operador. Default: Convidado) ")
     novo_utilizador = Users(novo_idColab , novo_nomeColab , novo_pin , novo_cargo)
     apagarTerminal()
 
@@ -294,7 +360,7 @@ def criarUser():
     else:
         sql = f"insert into users(idColab, nomeColab , pin , cargo) values('{novo_utilizador.idColab}' , '{novo_utilizador.nomeColab}' , '{novo_utilizador.pin}' , '{novo_utilizador.cargo}')"
         cursor.execute(sql)
-        print("*****")
+        print("***************")
         print("Utilizador adicionado com sucesso.")
 
     conexao.commit()
@@ -306,15 +372,26 @@ def removerUser():
     for linha in resultados:
         print("UserID:" , linha[0] , "Nome:" , linha[1] , "Cargo:" , linha[2])
         lista.append(linha[0])
-    escolha = int((input("Insira o ID de utilizador que pretende remover.\n")))
-    apagarTerminal()
+    
+    while True:
+        try:
+            escolha = int((input("Insira o ID de utilizador que pretende remover.\n")))
+            apagarTerminal()
+            break
+        except:
+            print("Insira apenas números inteiros.")
 
     while escolha not in lista:
         for linha in resultados:
                 print("UserID:" , linha[0] , "Nome:" , linha[1] , "Cargo:" , linha[2])
 
-        escolha = int(input("O ID de utilizador que inseriu não consta na base de dados. Por favor insira um ID válido.\n"))
-        apagarTerminal()
+        while True:
+            try:
+                escolha = int(input("O ID de utilizador que inseriu não consta na base de dados. Por favor insira um ID válido.\n"))
+                apagarTerminal()
+                break
+            except:
+                print("Insira apenas números inteiros.")
 
     sql = f"delete from users where idColab = '{escolha}'"
     cursor.execute(sql)
@@ -337,11 +414,17 @@ def verificarTicket():
                 print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11] , "Desc. da reparação:" , linha[12])
                 listaTicket.append(linha[0])
                 listaColab.append(linha[1])
-        escolha = int((input("Filtrar por:\n"
-                             "(1) Utilizador.\n"
-                             "(2) Ticket ID.\n"
-                             "(3) Sair.\n")))
-        apagarTerminal()
+        
+        while True:
+            try:
+                escolha = int((input("Filtrar por:\n"
+                                    "(1) Utilizador.\n"
+                                    "(2) Ticket ID.\n"
+                                    "(3) Sair.\n")))
+                apagarTerminal()
+                break
+            except:
+                print("Insira apenas números inteiros.")
 
         while escolha not in [1 , 2 , 3]:
             for linha in resultados:       
@@ -349,16 +432,27 @@ def verificarTicket():
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Equipamento:" , linha[8] , "Avaria:" , linha[9] , "Desc. da reparação:" , linha[12])
                 else:
                     print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11] , "Desc. da reparação:" , linha[12])
-            escolha = int((input("Escolha inválida.\n"
-                                "Filtrar por:\n"
-                                "(1) Utilizador.\n"
-                                "(2) Ticket ID.\n"
-                                "(3) Sair.\n")))
-            apagarTerminal()
-    
+            
+            while True:
+                try:
+                    escolha = int((input("Escolha inválida.\n"
+                                        "Filtrar por:\n"
+                                        "(1) Utilizador.\n"
+                                        "(2) Ticket ID.\n"
+                                        "(3) Sair.\n")))
+                    apagarTerminal()
+                    break
+                except:
+                    print("Insira apenas números inteiros.")
+
         if escolha == 1:
-            user = int(input("Insira o ID do utilizador. "))
-            apagarTerminal()
+            while True:
+                try:
+                    user = int(input("Insira o ID do utilizador. "))
+                    apagarTerminal()
+                    break
+                except:
+                    print("Insira apenas números inteiros.")
     
             if user not in listaColab:
                 for linha in resultados:       
@@ -380,8 +474,13 @@ def verificarTicket():
                         print("TicketID:" , linha[0] , "Data de criação:" , linha[2] , "Data de atendimento:" , linha[3] , "Data de resolução:" , linha[4] , "Estado do ticket:" , linha[5] , "Estado do atendimento:" , linha[6]   , "Tipo:" , linha[7] , "Software:" , linha[10] , "Necessidade:" , linha[11] , "Desc. da reparação:" , linha[12])
 
         elif escolha == 2:
-            ticket = int(input("Insira o ID do ticket. "))
-            apagarTerminal()
+            while True:
+                try:
+                    ticket = int(input("Insira o ID do ticket. "))
+                    apagarTerminal()
+                    break
+                except:
+                    print("Insira apenas números inteiros.")
     
             if ticket not in listaTicket:
                 for linha in resultados:       
@@ -449,11 +548,17 @@ conexao = mysql.connector.connect(
 )
 
 cursor = conexao.cursor()
+print("***************")
 print ("Login na aplicação Ticket2Help.")
-print("*****")
+print("***************")
 idColab = input("UserID: ")
-pin = int(input("PIN: "))
-apagarTerminal()
+while True:
+    try:
+        pin = int(input("PIN: "))
+        apagarTerminal()
+        break
+    except:
+        print("Insira apenas números inteiros.")
 
 if idColab == "Master" and pin == 9999:
     escolha = None
@@ -469,13 +574,13 @@ if idColab == "Master" and pin == 9999:
 
         elif escolha == 3:
             modificarTicket(None , idColab)
-        
+
         elif escolha == 4:
             criarUser()
 
         elif escolha == 5:
             removerUser()
-        
+
         elif escolha == 6:
             verificarTicket()
 
@@ -484,7 +589,7 @@ if idColab == "Master" and pin == 9999:
 
         elif escolha == 8:
             ticketsResolvidos()
-        
+
         elif escolha == 9:
             mediaTempo()
 
@@ -496,7 +601,7 @@ if idColab == "Master" and pin == 9999:
 
         elif escolha == 12:
             print("Aplicação encerrada.")
-            exit()            
+            exit()
 
 sql = f"select * from users where idColab = '{idColab}' and pin = '{pin}'"
 cursor.execute(sql)
