@@ -1,7 +1,26 @@
 from datetime import datetime
 from abc import ABC
 
+
 class Tickets(ABC):
+
+    """
+           Inicializar um objeto da classe Tickets.
+
+           Args:
+               *args: Argumentos variáveis para inicializar o objeto.
+
+           Note:
+               - O idColab é o identificador do colaborador associado ao ticket.
+               - A datahoraGerado é a data/hora em que o ticket foi gerado, inicializada com a data e hora do sistema atuais.
+               - A datahoraAtendido é a data/hora em que o ticket foi atendido.
+               - A datahoraResolvido é a data/hora em que o ticket foi resolvido.
+               - O estadoTicket indica o estado atual do ticket, iniciado como "Por atender".
+               - O estadoAtendimento indica o estado de atendimento do ticket.
+               - O tipoTicket é o tipo de ticket ("HW" para hardware - "SW" para software).
+               - A descRep é a descrição da reposta indicada pelo técnico associada ao ticket.
+
+    """
     def __init__(self , *args):
         self.idColab = None
         self.datahoraGerado = datetime.now()

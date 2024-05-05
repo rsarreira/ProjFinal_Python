@@ -1,6 +1,17 @@
 from tickets import Tickets
 
 class HW(Tickets):
+
+    """
+            Inicializar um objeto da classe HW.
+
+            Args:
+                *args: Argumentos variáveis para inicializar o objeto
+
+            Nota:
+                Se um único argumento do tipo HW for fornecido, os dados desse ticket serão copiados para o novo objeto HW.
+                Se quatro argumentos forem fornecidos, eles devem ser, respectivamente, idColab, tipoTicket, equipamento e avaria.
+    """
     def __init__(self, *args):
         super().__init__()
         self.equipamento = None

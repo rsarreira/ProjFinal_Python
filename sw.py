@@ -1,6 +1,19 @@
 from tickets import Tickets
 
+
 class SW(Tickets):
+
+    """
+            Inicializar um objeto da classe SW.
+
+            Args:
+                *args: Argumentos variáveis para inicializar o objeto.
+
+            Note:
+                Se um único argumento do tipo SW for fornecido, os dados desse ticket serão copiados para o novo objeto SW.
+                Se três argumentos forem fornecidos, eles devem ser, respectivamente, idColab, software e necessidade.
+                Se quatro argumentos forem fornecidos, eles devem ser, respectivamente, idColab, tipoTicket, software e necessidade.
+    """
     def __init__(self, *args):
         super().__init__()
         self.software = None

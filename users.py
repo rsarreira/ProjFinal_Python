@@ -1,5 +1,19 @@
 class Users():
     def __init__(self, *args):
+
+        """
+                Inicializar um objeto da classe Users.
+
+                Args:
+                    *args: Argumentos variáveis para inicializar o objeto.
+
+                Note:
+                    - O idColab é o ID do colaborador.
+                    - O nomeColab é o nome do colaborador.
+                    - O pin é o PIN é a password do colaborador
+                    - O cargo é o cargo do colaborador.
+        """
+
         self._idColab = 9999
         self._nomeColab = "Convidado"
         self._pin = 1234
@@ -30,7 +44,7 @@ class Users():
 
     @nomeColab.setter
     def nomeColab(self, valor):
-        if valor == str:
+        if valor !="" and valor !=" ":
             self._nomeColab = valor
 
     @property
@@ -52,4 +66,10 @@ class Users():
             self._cargo = valor
         
     def __str__(self):
+
+        """
+                Devolve:
+                    str: Uma string que representa o objecto Users.
+        """
+
         return f"ID: {self.idColab}, Nome: {self.nomeColab}, PIN: {self.pin} , Cargo: {self.cargo}."
